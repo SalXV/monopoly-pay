@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#090B10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Monopoly Pay" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="apple-touch-icon" href="/icon.svg" />
+  <title>Monopoly Pay &amp; Real Estate</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <!-- Global Bank Broadcast Banner -->
+  <div id="global-banner" class="global-banner" role="alert">
+    <span id="global-banner-text"></span>
+  </div>
+
+  <!-- Apple Pay Confirmation Overlay -->
+  <div id="pay-success-overlay" class="pay-success-overlay hidden">
+    <div class="pay-check-circle">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <div id="pay-success-title" style="font-size: 20px; font-weight: 800;">Pagamento Completato</div>
+    <div id="pay-success-sub" style="font-size: 14px; color: var(--text-dim);"></div>
+  </div>
+
+  <!-- Onboarding View -->
+  <main id="onboarding-view" class="app-shell">
+    <div style="text-align: center; margin: 18px 0 22px;">
+      <img src="/icon.svg" alt="Monopoly Pay" width="68" height="68" style="border-radius: 18px; box-shadow: 0 12px 28px rgba(10,132,255,0.35);" />
+      <h1 style="margin: 12px 0 4px; font-size: 24px; letter-spacing: -0.5px;">Monopoly Pay &amp; Real Estate</h1>
+      <p style="margin: 0; font-size: 13px; color: var(--text-dim);">Banca digitale, affitti automatici &amp; Apple Pay al tavolo</p>
+    </div>
+
+    <div id="resume-session-box" class="glass hidden" style="margin-bottom: 14px;">
+      <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 8px;">Sessione salvata trovata</div>
+      <button id="btn-resume-session" class="btn btn-success btn-block">Riprendi partita precedente</button>
+    </div>
+
+    <div class="banker-switch-bar" style="margin-bottom: 14px;">
+      <button id="tab-mode-join" class="banker-switch-btn active" type="button">Unisciti a Stanza</button>
+      <button id="tab-mode-create" class="banker-switch-btn" type="button">Crea Partita (Banchiere)</button>
+    </div>
+
+    <form id="onboarding-form" class="glass">
+      <div id="join-only-fields">
+        <div class="field">
+          <label for="inp-room-code">Codice Stanza (6 caratteri)</label>
+          <input id="inp-room-code" class="input" maxlength="6" placeholder="Es. MNP482" style="text-transform: uppercase; letter-spacing: 2px; font-weight: 700;" />
+        </div>
+      </div>
+
+      <div id="create-only-fields" class="hidden">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="field">
+            <label for="inp-currency">Valuta</label>
+            <select id="inp-currency" class="select">
+              <option value="€">€ (Euro)</option>
+              <option value="M">M (Monopoly)</option>
+              <option value="$">$ (Dollari)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="inp-start-bal">Saldo Iniziale</label>
+            <input id="inp-start-bal" class="input" type="number" value="1500" min="0" />
+          </div>
+        </div>
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 14px; cursor: pointer;">
+          <input id="inp-free-parking" type="checkbox" style="width: 18px; height: 18px;" />
+          <span>Attiva Salvadanaio <b>Parcheggio Gratuito</b></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="inp-player-name">Il tuo Nome</label>
+        <input id="inp-player-name" class="input" placeholder="Es. Marco" required />
+      </div>
+
+      <div class="field">
+        <label>Scegli la tua Pedina</label>
+        <div id="token-picker" class="token-grid"></div>
+      </div>
+
+      <div class="field">
+        <label>Colore Carta Virtuale</label>
+        <div id="color-picker" class="color-dots"></div>
+      </div>
+
+      <div id="onboarding-error" style="color: var(--red); font-size: 13px; margin-bottom: 10px;"></div>
+      <button id="btn-onboarding-submit" type="submit" class="btn btn-primary btn-block">Entra nella Stanza</button>
+    </form>
+  </main>
+
+  <!-- Main App Shell -->
+  <div id="main-app" class="hidden">
+    <main class="app-shell">
+      <header class="top-bar">
+        <div>
+          <div class="brand-title">Monopoly Pay</div>
+          <div id="header-subtitle" style="font-size: 11px; color: var(--text-dim);">Real Estate &amp; Wallet</div>
+        </div>
+        <button id="btn-room-badge" class="room-pill" type="button">
+          <span class="live-dot"></span>
+          <span id="room-code-label">------</span>
+        </button>
+      </header>
+
+      <!-- Tab Content Containers -->
+      <section id="tab-wallet" class="tab-panel"></section>
+      <section id="tab-properties" class="tab-panel hidden"></section>
+      <section id="tab-bank" class="tab-panel hidden"></section>
+      <section id="tab-log" class="tab-panel hidden"></section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigazione principale">
+      <button class="nav-item active" data-tab="wallet" type="button">
+        <span class="nav-icon">💳</span>
+        <span>Wallet</span>
+      </button>
+      <button class="nav-item" data-tab="properties" type="button">
+        <span class="nav-icon">🏘️</span>
+        <span>Proprietà</span>
+      </button>
+      <button class="nav-item" data-tab="bank" type="button">
+        <span class="nav-icon">🏦</span>
+        <span>Banca &amp; Setup</span>
+      </button>
+      <button class="nav-item" data-tab="log" type="button">
+        <span class="nav-icon">📜</span>
+        <span>Registro Live</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Modal / Bottom Sheet -->
+  <div id="modal-backdrop" class="modal-backdrop hidden">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

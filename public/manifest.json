@@ -1,0 +1,19 @@
+{
+  "name": "Monopoly Pay & Real Estate",
+  "short_name": "Monopoly Pay",
+  "description": "Wallet digitale, banca e gestione immobiliare per Monopoly",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090B10",
+  "theme_color": "#090B10",
+  "lang": "it",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
